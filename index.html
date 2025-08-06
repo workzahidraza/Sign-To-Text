@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SignToText</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css"
+      integrity="sha512-DxV+EoADOkOygM4IR9yXP8Sb2qwgidEmeqAEmDKIOfPRQZOWbXCzLC6vjbZyy0vPisbH2SyW27+ddLVCN+OMzQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <script>
+  let lastSpokenText = "";  // Avoid repeating the same word again & again
+
+  function speakText(text) {
+    if (text !== lastSpokenText && text !== "") {
+      const utterance = new SpeechSynthesisUtterance(text);
+      window.speechSynthesis.speak(utterance);
+      lastSpokenText = text;
+    }
+  }
+
+  function fetchTranslatedText() {
+    fetch('/get_text')
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById('outputText').innerText = data.text || "Waiting for Sign...";
+        speakText(data.text);
+      })
+      .catch(error => console.error('Error fetching text:', error));
+  }
+
+  setInterval(fetchTranslatedText, 500); // Update every 500ms
+</script>
+
+  </head>
+  <body class="box-border">
+    <div class="main h-screen w-screen">
+      <!-- Navbar -->
+      <nav class="bg-red-200 h-10">
+        <h1 class="text-center text-2xl py-1">Sign-To-Text</h1>
+      </nav>
+
+      <!-- Webcam and Text Output Section -->
+      <div class="content flex flex-col gap-10 h-screen w-screen justify-start items-center mt-10 px-10 sm:flex sm:flex-row sm:justify-center sm:items-center md:flex md:justify-center md:items-center lg:mt-1">
+        <!-- Webcam Feed -->
+        <div class="img-box w-70 h-80 bg-green-200 rounded-xl shadow-lg sm:w-80 sm:h-96 md:w-[50%] md:h-[70%] lg:w-[50%] lg:h-[80%]">
+          <div class="img h-full w-full">
+            <!-- <img src="{{ url_for('video_feed') }}" class="w-full h-full object-cover rounded-xl"> -->
+            <img src="{{ url_for('video_feed') }}"  class="w-full h-full object-cover rounded-xl">
+
+          </div>
+        </div>
+
+        <!-- Translated Text Output Box -->
+        <div class="text-box w-70 h-30 bg-green-200 rounded-xl shadow-lg flex items-center justify-center sm:w-80 sm:h-82 md:h-[50%] lg:w-[40%] xl:w-[50%]">
+          <div id="outputText" class="p-4 text-3xl text-center">Waiting for Sign...</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- About Services Section -->
+    <!-- (No changes here, your existing code is perfect for this section) -->
+
+    <div class="about-services bg-red-300 h-screen w-screen flex flex-col gap-10 items-center justify-center xl:flex xl:flex-row xl:justify-evenly">
+      <!-- Box1 -->
+      <div class="box1 h-[40%] w-[80%] rounded-xl p-2 px-7 bg-cyan-500 shadow-lg shadow-cyan-500/50 sm:px-10 sm:py-5 xl:h-[80%]">
+        <h1 class="text-center text-xl mt-1 sm:text-2xl lg:text-4xl">How Does it work ?</h1>
+        <ul class="text-xs list-disc sm:text-md sm:mt-5 lg:text-2xl xl:text-3xl">
+          <li><b>Capture & Detect Hand –</b> Use a webcam and tools like OpenCV or MediaPipe to detect the hand and track its movements or shape.</li>
+          <li><b>Recognize the Gesture – </b>A trained model (like CNN) identifies which sign (letter/word) the hand is making.</li>
+          <li><b>Convert to Text –</b> The recognized sign is converted into readable text and shown on screen or spoken using text-to-speech.</li>
+        </ul>
+      </div>
+
+      <!-- Box2 -->
+      <div class="box2 min-h-[40%] w-[80%] rounded-xl p-5 px-7 bg-cyan-500 shadow-lg shadow-cyan-500/50 xl:h-[80%]">
+        <h1 class="text-center text-lg mt-1 sm:text-2xl lg:text-4xl">What problem this idea is solving?</h1>
+        <ul class="text-xs list-disc sm:text-[15px] sm:p-2 lg:text-2xl xl:text-3xl">
+          <li>Bridges communication gap between deaf/mute individuals and those who don’t know sign language.</li>
+          <li>Promotes inclusivity in public spaces, schools, hospitals, and workplaces.</li>
+          <li>Enables independence for people with hearing/speech disabilities in daily interactions.</li>
+          <li>Supports education by helping students with special needs communicate better.</li>
+          <li>Can be used in customer service or kiosks to assist hearing-impaired users.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- About Us Section -->
+    <div class="about text-2xl text-center">
+      <h2>About Us</h2>
+    </div>
+
+    <div class="about-us bg-blue-300 min-h-screen w-screen mt-1 flex flex-col items-center gap-10 justify-center pt-10">
+      <!-- Team Boxes -->
+      <!-- Repeat of your current structure -->
+      <!-- You can keep the existing code for team members (Azhan, Zahid, etc.) here -->
+    </div>
+
+    <!-- Footer -->
+    <div class="footer h-10 w-screen bg-black mt-2">
+      <h3></h3>
+    </div>
+
+    <!-- JavaScript for Fetching Translated Text -->
+    <script>
+      function fetchTranslatedText() {
+        fetch('/get_text')
+          .then(response => response.json())
+          .then(data => {
+            document.getElementById('outputText').innerText = data.text || "Waiting for Sign...";
+          })
+          .catch(error => console.error('Error fetching text:', error));
+      }
+
+      setInterval(fetchTranslatedText, 500); // Update every 500ms
+    </script>
+  </body>
+</html>
